@@ -16,7 +16,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(webEnvironment = DEFINED_PORT)
+@SpringBootTest(webEnvironment = DEFINED_PORT,classes = SsoApplication.class)
 public class ApplicationTests {
 
 	@Value("${local.server.port}")
@@ -47,7 +47,7 @@ public class ApplicationTests {
 	@Test
 	public void envEndpointProtected() {
 		ResponseEntity<String> response = template.getForEntity("http://localhost:"
-				+ port + "/env", String.class);
+				+ port + "/actuator/health", String.class);
 		assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
 		assertEquals("Basic realm=\"Spring\"",
 				response.getHeaders().getFirst("WWW-Authenticate"));

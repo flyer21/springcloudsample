@@ -7,8 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -22,9 +23,9 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @RunWith(SpringJUnit4ClassRunner.class)
 //@SpringApplicationConfiguration(classes = AuthserverApplication.class)
-@WebAppConfiguration
+//@WebAppConfiguration
 //@IntegrationTest("server.port:0")
-@SpringBootTest(webEnvironment = DEFINED_PORT)
+@SpringBootTest(webEnvironment = DEFINED_PORT,classes = AuthserverApplication.class)
 public class ApplicationTests {
 
 	@Value("${local.server.port}")
@@ -66,8 +67,10 @@ public class ApplicationTests {
 				form, headers, HttpMethod.POST, URI.create("http://localhost:" + port
 						+ "/uaa/login"));
 		ResponseEntity<Void> location = template.exchange(request, Void.class);
+		String loca = location.getHeaders().getFirst("Location");
 		assertEquals("http://localhost:" + port + "/uaa/",
-				location.getHeaders().getFirst("Location"));
+
+				loca);
 	}
 
 	private String getCsrf(String soup) {
@@ -77,6 +80,21 @@ public class ApplicationTests {
 			return matcher.group(1);
 		}
 		return null;
+	}
+	@Test
+	public void printPassWord(){
+		getPassword("user","password");
+
+	}
+
+	public String getPassword(String userName, String password){
+		UserDetails user = User.withDefaultPasswordEncoder()
+				.username(userName)
+				.password(password)
+				.roles("user")
+				.build();
+		System.out.println(user.getPassword());
+		return user.getPassword();
 	}
 
 }

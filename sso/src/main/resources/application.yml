@@ -2,9 +2,12 @@
 server:
   port: 9999
 
+spring:
+  security:
+    user:
+      password: user
 security:
-  user:
-    password: user
+
   ignored: /,/favicon.ico,/index.html,/home.html,/dashboard.html,/js/**,/css/**,/webjars/**
   sessions: ALWAYS
   oauth2:
@@ -22,6 +25,7 @@ logging:
 ---
 spring:
   profiles: default
+
 security:
   oauth2:
     client:
