@@ -1,7 +1,6 @@
 package demo.config;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -13,9 +12,9 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 
 import java.security.KeyPair;
 
-@Configuration
+//@Configuration
 @EnableAuthorizationServer
-class OAuth2Config extends AuthorizationServerConfigurerAdapter {
+public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
 
 //		@Autowired
 //		private AuthenticationManager authenticationManager;

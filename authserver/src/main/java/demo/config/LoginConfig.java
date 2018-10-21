@@ -4,12 +4,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 @Configuration
 //	@Order(ManagementServerProperties.ACCESS_OVERRIDE_ORDER)
-class LoginConfig extends WebSecurityConfigurerAdapter {
+public class LoginConfig extends WebSecurityConfigurerAdapter {
 
 //		@Bean
 //		public UserDetailsService userDetailsService() {
@@ -18,7 +19,7 @@ class LoginConfig extends WebSecurityConfigurerAdapter {
 //			return manager;
 //		}
 
-//
+
 //    @Override
 //    protected void configure(HttpSecurity http) throws Exception {
 //        http
@@ -47,6 +48,10 @@ class LoginConfig extends WebSecurityConfigurerAdapter {
                 .withUser("admin").password("{bcrypt}$2a$10$/jwXQ/jvvxtwqVPb9aMOAOl3JK4KBQDv4C266cenVfdr5nq9BwRSi").roles("USER", "ADMIN");
     }
 
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/favor.ico","/css/**","/js/**");
+    }
     // Expose the UserDetailsService as a Bean
     @Bean
     @Override

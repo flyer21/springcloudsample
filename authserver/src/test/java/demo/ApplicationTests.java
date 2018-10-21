@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -19,13 +17,13 @@ import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 //@SpringApplicationConfiguration(classes = AuthserverApplication.class)
 //@WebAppConfiguration
 //@IntegrationTest("server.port:0")
-@SpringBootTest(webEnvironment = DEFINED_PORT,classes = AuthserverApplication.class)
+@SpringBootTest(webEnvironment = RANDOM_PORT,classes = AuthserverApplication.class)
 public class ApplicationTests {
 
 	@Value("${local.server.port}")
@@ -40,6 +38,18 @@ public class ApplicationTests {
 		ResponseEntity<String> response = template.getForEntity("http://localhost:"
 				+ port + "/uaa/", String.class);
 		assertEquals(HttpStatus.FOUND, response.getStatusCode());
+	}
+	@Test
+	public void getJs() {
+		ResponseEntity<String> response = template.getForEntity("http://localhost:"
+				+ port + "/uaa/js/wro.js", String.class);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+	}
+	@Test
+	public void getCss() {
+		ResponseEntity<String> response = template.getForEntity("http://localhost:"
+				+ port + "/uaa/css/wro.css", String.class);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
 	}
 
 	@Test
@@ -71,6 +81,12 @@ public class ApplicationTests {
 		assertEquals("http://localhost:" + port + "/uaa/",
 
 				loca);
+
+		ResponseEntity<String> index = template.getForEntity("http://localhost:"
+				+ port + "/uaa/", String.class);
+		System.out.print(response.getBody());
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+
 	}
 
 	private String getCsrf(String soup) {
@@ -80,21 +96,6 @@ public class ApplicationTests {
 			return matcher.group(1);
 		}
 		return null;
-	}
-	@Test
-	public void printPassWord(){
-		getPassword("user","password");
-
-	}
-
-	public String getPassword(String userName, String password){
-		UserDetails user = User.withDefaultPasswordEncoder()
-				.username(userName)
-				.password(password)
-				.roles("user")
-				.build();
-		System.out.println(user.getPassword());
-		return user.getPassword();
 	}
 
 }

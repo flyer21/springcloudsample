@@ -8,8 +8,8 @@ spring:
       password: user
 security:
 
-  ignored: /,/favicon.ico,/index.html,/home.html,/dashboard.html,/js/**,/css/**,/webjars/**
-  sessions: ALWAYS
+#  ignored: /,/favicon.ico,/index.html,/home.html,/dashboard.html,/js/**,/css/**,/webjars/**
+#  sessions: ALWAYS
   oauth2:
     sso:
       loginPath: /dashboard/login

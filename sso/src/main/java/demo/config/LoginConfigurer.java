@@ -2,6 +2,7 @@ package demo.config;
 
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfToken;
@@ -24,14 +25,18 @@ public class LoginConfigurer extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.antMatcher("/dashboard/**").authorizeRequests().anyRequest()
+
+        http.antMatcher("/**").authorizeRequests().anyRequest()
                 .authenticated().and().csrf()
                 .csrfTokenRepository(csrfTokenRepository()).and()
                 .addFilterAfter(csrfHeaderFilter(), CsrfFilter.class)
                 .logout().logoutUrl("/dashboard/logout").permitAll()
                 .logoutSuccessUrl("/");
     }
-
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/favor.ico","/css/**","/js/**");
+    }
     private Filter csrfHeaderFilter() {
         return new OncePerRequestFilter() {
             @Override
