@@ -1,6 +1,7 @@
 package demo.config;
 
-import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -8,7 +9,6 @@ import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.Filter;
@@ -19,23 +19,40 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Component
-@EnableOAuth2Sso
-public class LoginConfigurer extends WebSecurityConfigurerAdapter {
+@Configuration
+@Order(2)
+public class FormLoginConfigurer extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-
-        http.antMatcher("/**").authorizeRequests().anyRequest()
+        // http.authorizeRequests()每个匹配器按照它们被声明的顺序被考虑。
+//        http
+//                .authorizeRequests()
+//                // 所有用户均可访问的资源
+//                .antMatchers("/css/**", "/js/**","/images/**", "/webjars/**", "**/favicon.ico", "/index").permitAll()
+//                // ROLE_USER的权限才能访问的资源
+//                .antMatchers("/user/**").hasRole("USER")
+//                // 任何尚未匹配的URL只需要验证用户即可访问
+//                .anyRequest().authenticated()
+//                .and()
+//                .formLogin()
+//                // 指定登录页面,授予所有用户访问登录页面
+//                .loginPage("/login")
+//                .permitAll()
+//                .and()
+//                .headers()
+//                .frameOptions().sameOrigin();
+        http.authorizeRequests().anyRequest()
                 .authenticated().and().csrf()
                 .csrfTokenRepository(csrfTokenRepository()).and()
-                .addFilterAfter(csrfHeaderFilter(), CsrfFilter.class)
+                .addFilterAfter(csrfHeaderFilter(), CsrfFilter.class).formLogin()
+                .loginPage("/dashboard/login").permitAll().and()
                 .logout().logoutUrl("/dashboard/logout").permitAll()
                 .logoutSuccessUrl("/");
     }
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/favor.ico","/css/**","/js/**");
+        web.ignoring().antMatchers("/favicon.ico","/css/**","/js/**","/webjars/**");
     }
     private Filter csrfHeaderFilter() {
         return new OncePerRequestFilter() {

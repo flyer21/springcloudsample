@@ -47,7 +47,7 @@ public class ApplicationTests {
 	@Test
 	public void envEndpointProtected() {
 		ResponseEntity<String> response = template.getForEntity("http://localhost:"
-				+ port + "/actuator/health", String.class);
+				+ port + "/actuator/env", String.class);
 		assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
 		assertEquals("Basic realm=\"Spring\"",
 				response.getHeaders().getFirst("WWW-Authenticate"));

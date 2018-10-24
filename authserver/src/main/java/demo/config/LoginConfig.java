@@ -48,10 +48,10 @@ public class LoginConfig extends WebSecurityConfigurerAdapter {
                 .withUser("admin").password("{bcrypt}$2a$10$/jwXQ/jvvxtwqVPb9aMOAOl3JK4KBQDv4C266cenVfdr5nq9BwRSi").roles("USER", "ADMIN");
     }
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/favor.ico","/css/**","/js/**");
-    }
+//    @Override
+//    public void configure(WebSecurity web) throws Exception {
+//        web.ignoring().antMatchers("/favor.ico","/css/**","/js/**");
+//    }
     // Expose the UserDetailsService as a Bean
     @Bean
     @Override
@@ -72,11 +72,13 @@ public class LoginConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.formLogin().loginPage("/login").permitAll()
+        http.authorizeRequests() .and().formLogin().loginPage("/login").permitAll()
                 .and().authorizeRequests()
                 .anyRequest().authenticated();
     }
-
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/favicon.ico","/css/**","/js/**","/webjars/**");
+    }
 //		@Override
 //		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 //			auth.parentAuthenticationManager(authenticationManager);

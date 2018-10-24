@@ -6,17 +6,28 @@ spring:
   security:
     user:
       password: user
+
 security:
 
 #  ignored: /,/favicon.ico,/index.html,/home.html,/dashboard.html,/js/**,/css/**,/webjars/**
 #  sessions: ALWAYS
   oauth2:
     sso:
-      loginPath: /dashboard/login
+      login-path: /dashboard/login
+#      loginPath:
 management:
   security:
     role: HERO
 
+  endpoint:
+    env:
+      roles:  HERO,A
+      show-details: always
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
 logging:
   level:
     org.springframework.security: DEBUG
